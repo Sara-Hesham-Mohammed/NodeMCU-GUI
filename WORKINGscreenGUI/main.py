@@ -8,10 +8,11 @@ from kivy.uix.screenmanager import ScreenManager, SlideTransition
 from kivy.clock import Clock
 from kivy.core.window import Window
 from circularprogressbar import CircularProgressBar1, CircularProgressBar2
+from Cloud import Firebase
 
 circularProgressBar1 = CircularProgressBar1()
 circularProgressBar2 = CircularProgressBar2()
-
+database = Firebase()
 kv = '''
 MDScreen:
     orientation: 'vertical'
@@ -177,6 +178,7 @@ class runApp(MDApp):
     Window.size = (1280, 720)
     screen_manager = ScreenManager(transition=SlideTransition(duration=12))
 
+
     def __init__(self, **kwargs):
         super(runApp, self).__init__(**kwargs)
         self.running = True
@@ -208,6 +210,15 @@ class runApp(MDApp):
             progress2.value -= 1
         else:
             progress2.value = 100
+
+    def changeGUItext(self,item):
+        value = database.get_data(item)
+        #self.run_app_screen.ids[f"{item}ID"].text = value
+
+        if item == "speed":
+            self.run_app_screen.ids[f"{item}ID"].text = f'{value} KM/H'
+        elif item == "range" or "distancetravelled":
+            self.run_app_screen.ids[f"{item}ID"].text= f'{value} KM'
 
 if __name__ == '__main__':
     runApp().run()
