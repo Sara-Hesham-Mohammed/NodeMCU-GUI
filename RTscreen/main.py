@@ -214,11 +214,12 @@ class runApp(MDApp):
     def changeGUItext(self,item):
         value = database.get_data(item)
         #self.run_app_screen.ids[f"{item}ID"].text = value
-
         if item == "speed":
             self.run_app_screen.ids[f"{item}ID"].text = f'{value} KM/H'
         elif item == "range" or "distancetravelled":
             self.run_app_screen.ids[f"{item}ID"].text= f'{value} KM'
+        elif item == "battery":
+            self.run_app_screen.ids[f"{item}ID"].text = f'{value} %'
 
 if __name__ == '__main__':
     runApp().run()
