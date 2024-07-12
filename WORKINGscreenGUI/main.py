@@ -175,7 +175,7 @@ MDScreen:
 
 class runApp(MDApp):
     Window.size = (1280, 720)
-    screen_manager = ScreenManager(transition=SlideTransition(duration=1.5))
+    screen_manager = ScreenManager(transition=SlideTransition(duration=12))
 
     def __init__(self, **kwargs):
         super(runApp, self).__init__(**kwargs)
