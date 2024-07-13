@@ -100,7 +100,7 @@ MDScreen:
             font_size: "15sp"
             pos_hint: {'top':1.145, 'x':0.03}
         Image:
-            id: smoke
+            id: smokeID
             source: 'Images/smoke.png'
             size_hint: None, None
             size: 50, 50
@@ -177,8 +177,8 @@ MDScreen:
 '''
 
 class runApp(MDApp):
-    
-    screen_manager = ScreenManager(transition=SlideTransition(duration=12))
+
+    screen_manager = ScreenManager(transition=SlideTransition(duration=1.2))
 
 
     def __init__(self, **kwargs):
@@ -216,19 +216,39 @@ class runApp(MDApp):
         else:
             progress2.value = 100
 
-    def changeGUItext(self,item):
-        value = database.get_data(item)
-        print(f"{item} = {value}")
-        #self.run_app_screen.ids[f"{item}ID"].text = value
+    def changeGUItext(self,sensorName):
+        value = database.get_data(sensorName)
+        print(f"{sensorName} = {value}")
+        #self.run_app_screen.ids[f"{sensorName}ID"].text = value
         try:
-            if item == "speed":
-                self.run_app_screen.ids[f"{item}ID"].text = f'{value} KM/H'
-            elif item == "range" or "distanceTravelled":
-                self.run_app_screen.ids[f"{item}ID"].text= f'{value} KM'
-            elif item == "battery":
-                self.run_app_screen.ids[f"{item}ID"].text = f'{value} %'
+            if sensorName == "speed":
+                self.run_app_screen.ids[f"{sensorName}ID"].text = f'{value} KM/H'
+            elif sensorName == "range" or "distanceTravelled":
+                self.run_app_screen.ids[f"{sensorName}ID"].text= f'{value} KM'
+            elif sensorName == "batteryPercentage":
+                self.run_app_screen.ids[f"{sensorName}ID"].text = f'{value} %'
         except Exception as e:
             print(f"Error: {e}")
+
+
+    def changeGUIicons(self, sensorName):
+        try:
+            id = self.run_app_screen.ids[f"{sensorName}ID"]
+            value = database.get_data(sensorName)
+            print(f"{sensorName} = {value}")
+            onSrc = f"Images/{sensorName}Red.png"
+            offSrc = f'Images/{sensorName}.png'
+            print(f"TYPE: {type(value)}")
+
+            if sensorName == "smoke":
+                if value == True:
+                    id.source = onSrc
+                    print(f"TRUE: {value}")
+                else:
+                    print(f"FALSE: {value}")
+                    id.source = offSrc
+        except Exception as e:
+            print(f"Error in change GUI icons: {e}")
 
     def getDBdata(self):
          while self.running:
@@ -236,6 +256,7 @@ class runApp(MDApp):
             self.changeGUItext("range")
             self.changeGUItext("distanceTravelled")
             self.changeGUItext("batteryPercentage")
+            self.changeGUIicons("smoke")
             time.sleep(1)
 
     def start_thread(self):
