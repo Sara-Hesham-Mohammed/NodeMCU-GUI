@@ -175,7 +175,6 @@ MDScreen:
 '''
 
 class runApp(MDApp):
-    Window.size = (1280, 720)
     screen_manager = ScreenManager(transition=SlideTransition(duration=12))
 
 
@@ -184,6 +183,8 @@ class runApp(MDApp):
         self.running = True
         self.splash_screen = Builder.load_file("splashScreen.kv")
         self.run_app_screen = Builder.load_string(kv)
+        self.getDBdata()
+
 
     def build(self):
         self.title = "BUE RACING TEAM"
@@ -213,13 +214,24 @@ class runApp(MDApp):
 
     def changeGUItext(self,item):
         value = database.get_data(item)
+        print(f"{item} = {value}")
         #self.run_app_screen.ids[f"{item}ID"].text = value
-        if item == "speed":
-            self.run_app_screen.ids[f"{item}ID"].text = f'{value} KM/H'
-        elif item == "range" or "distancetravelled":
-            self.run_app_screen.ids[f"{item}ID"].text= f'{value} KM'
-        elif item == "battery":
-            self.run_app_screen.ids[f"{item}ID"].text = f'{value} %'
+        try:
+            if item == "speed":
+                self.run_app_screen.ids[f"{item}ID"].text = f'{value} KM/H'
+            elif item == "range" or "distanceTravelled":
+                self.run_app_screen.ids[f"{item}ID"].text= f'{value} KM'
+            elif item == "battery":
+                self.run_app_screen.ids[f"{item}ID"].text = f'{value} %'
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def getDBdata(self):
+        self.changeGUItext("speed")
+        self.changeGUItext("range")
+        self.changeGUItext("distanceTravelled")
+        self.changeGUItext("batteryPercentage")
+
 
 if __name__ == '__main__':
     runApp().run()

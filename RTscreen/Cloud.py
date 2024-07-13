@@ -11,22 +11,12 @@ class Firebase:
             'databaseURL': 'https://rt-screen-afa55-default-rtdb.firebaseio.com/'
         })
 
-        self.database = db.reference('sensorData')
+        self.database = db.reference('EVData')
 
     # Example usage
     def get_data(self,field):
         data = self.database.child(field).get()
         return data
 
-    x=100
 
-    while x>0:
-        # Example usage
-        distance_travelled = get_data('distanceTravelled')
-        value = get_data('value')
-
-        print('Distance Travelled:', distance_travelled)
-        print("Value:", value)
-
-        x-=1
 
