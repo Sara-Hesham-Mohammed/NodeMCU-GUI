@@ -9,6 +9,8 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from circularprogressbar import CircularProgressBar1, CircularProgressBar2
 from Cloud import Firebase
+import threading
+import time
 
 circularProgressBar1 = CircularProgressBar1()
 circularProgressBar2 = CircularProgressBar2()
@@ -142,7 +144,7 @@ MDScreen:
             size: 65, 65
             pos_hint: {"center_x":0.61, "center_y": 0.67}
         Label:
-            id: batteryID
+            id: batteryPercentageID
             text: 'BATTERY %'
             font_size: "35sp"
             size: self.texture_size
@@ -175,6 +177,7 @@ MDScreen:
 '''
 
 class runApp(MDApp):
+    
     screen_manager = ScreenManager(transition=SlideTransition(duration=12))
 
 
@@ -183,7 +186,8 @@ class runApp(MDApp):
         self.running = True
         self.splash_screen = Builder.load_file("splashScreen.kv")
         self.run_app_screen = Builder.load_string(kv)
-        self.getDBdata()
+        self.start_thread()
+        #self.getDBdata()
 
 
     def build(self):
@@ -227,10 +231,21 @@ class runApp(MDApp):
             print(f"Error: {e}")
 
     def getDBdata(self):
-        self.changeGUItext("speed")
-        self.changeGUItext("range")
-        self.changeGUItext("distanceTravelled")
-        self.changeGUItext("batteryPercentage")
+         while self.running:
+            self.changeGUItext("speed")
+            self.changeGUItext("range")
+            self.changeGUItext("distanceTravelled")
+            self.changeGUItext("batteryPercentage")
+            time.sleep(1)
+
+    def start_thread(self):
+        # Start the thread to run getDBdata
+        thread = threading.Thread(target=self.getDBdata)
+        thread.daemon = True  # Daemonize thread to exit when main program exits
+        thread.start()
+
+    def stop_thread(self):
+        self.running = False  # Stop the running loop
 
 
 if __name__ == '__main__':
